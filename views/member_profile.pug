@@ -1,0 +1,7 @@
+extends layout
+
+block content
+	h2  profile
+	p Form to change a member's profile information
+	form(action="/member/profile", method="post")
+		button(type="submit") Submit

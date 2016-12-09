@@ -1,0 +1,14 @@
+extends layout
+
+block content
+	h2  :member 
+	p Shows images posted by a single member, with optional admin controls
+	ul
+		li
+			a(href="/board/image/new") Add Image
+	form(method="post", action="/board/image/:id/delete")
+		button(type="submit") Delete Image
+	form(method="post", action="/board/image/:id/vote/:direction")
+		button(type="submit") Vote
+	form(method="post", action="/board/image/:id/grab")
+		button(type="submit") Add to Board

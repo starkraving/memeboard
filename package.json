@@ -1,0 +1,36 @@
+{
+  "name": "memeboard",
+  "version": "1.0.0",
+  "description": "Image Board app for FreeCodeCamp",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starkraving/memeboard.git"
+  },
+  "author": "Mike Ritchie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/starkraving/memeboard/issues"
+  },
+  "homepage": "https://github.com/starkraving/memeboard#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "mongodb": "^2.2.12",
+    "mongoose": "^4.7.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-twitter": "^1.0.4",
+    "pug": "^2.0.0-beta6"
+  },
+  "devDependencies": {
+    "dotenv": "^2.0.0",
+    "gulp": "^3.9.1",
+    "gulp-develop-server": "^0.5.2",
+    "nodebuilder": "^0.9.3"
+  }
+}

@@ -1,0 +1,7 @@
+extends layout
+
+block content
+	h2  image new
+	p Form to post new image to a member's board
+	form(action="/board/image/new", method="post")
+		button(type="submit") Submit
