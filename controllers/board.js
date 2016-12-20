@@ -1,5 +1,6 @@
-var express = require('express');
-var router = express.Router();
+var express     = require('express');
+var router      = express.Router();
+var member      = require('../models/mw.member.js');
 
 
 /**
@@ -12,7 +13,7 @@ router.get('/public/:p?', function(req, res){
 /**
  *Shows images posted by a single member, with optional admin controls
  */
-router.get('/:member/:p?', function(req, res){
+router.get('/:member/:p?', member.getByScreenName('params', 'member'), function(req, res){
 	res.render("board_member_", {title: " :member "});
 });
 
