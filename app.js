@@ -26,6 +26,15 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false
 }));
+app.locals.memberRole = 'public';
+app.locals.memberInfo = {'screen_name':''};
+app.use(function(req, res, next){
+	if ( req.session.role ) {
+		app.locals.memberRole = req.session.role;
+		app.locals.memberInfo = req.session.memberInfo;
+	}
+	next();
+})
 
 // dynamically include routes (Controller)
 fs.readdirSync('./controllers').forEach(function (file) {

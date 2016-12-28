@@ -6,7 +6,9 @@ module.exports = (function(){
 		'screen_name': String,
 		'id': Number,
 		'profile_image_url_https': String,
-		''
+		'city': {type: String, default: ''},
+		'state': {type: String, default: ''},
+		'country': {type: String, default: ''}
 	}));
 
 	return {

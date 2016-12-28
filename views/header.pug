@@ -4,11 +4,13 @@ header
 		ul
 			li
 				a(href="/board/public") Home
-			li
-				a(href="/member/login") Sign in with Twitter
-			li
-				a(href="/board/:member") My Board
-			li
-				a(href="/member/profile") My Profile
-			li
-				a(href="/member/logout") Log Out
+			if( memberRole == 'public' )
+				li
+					a(href="/member/login") Sign in with Twitter
+			else
+				li
+					a(href="/board/"+memberInfo.screen_name) My Board
+				li
+					a(href="/member/profile") My Profile
+				li
+					a(href="/member/logout") Log Out

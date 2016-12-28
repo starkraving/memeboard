@@ -1,4 +1,5 @@
 var express     = require('express');
+var app			= express();
 var router      = express.Router();
 var request     = require('request');
 var qs          = require('querystring');
@@ -58,6 +59,7 @@ router.get('/auth', function(req, res){
 			member.findOrCreate(user, function(user){
 				req.session.role = 'member';
 				req.session.memberInfo = user;
+				app.locals.memberInfo = user;
 				res.redirect("/board/"+user.screen_name);
 			});
 		});
@@ -83,7 +85,8 @@ router.post('/profile', auth.requires('member'), function(req, res){
  *Destroys a member's session
  */
 router.get('/logout', function(req, res){
-	
+	app.locals.memberRole = 'public';
+	req.session.destroy();
 	res.redirect("/board/public");
 });
 
