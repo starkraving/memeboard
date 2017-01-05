@@ -1,7 +1,20 @@
 extends layout
 
 block content
-	h2  profile
-	p Form to change a member's profile information
 	form(action="/member/profile", method="post")
-		button(type="submit") Submit
+		h2.col-sm-12  Member Profile
+		section.form-group.form-group-sm.col-sm-6
+			label(for="firstname") First Name:
+			input.form-control(type="text", name="firstname", value=memberInfo.firstname)
+		section.form-group.form-group-sm.col-sm-6
+			label(for="lastname") Last Name:
+			input.form-control(type="text", name="lastname", value=memberInfo.lastname)
+		section.form-group.form-group-sm.col-sm-8
+			label(for="city") City:
+			input.form-control(type="text", name="city", value=memberInfo.city)
+		section.form-group.form-group-sm.col-sm-4
+			label(for="state") State/Province:
+			input.form-control(type="text", name="state", value=memberInfo.state)
+		section.col-sm-12
+			div.btn-toolbar.pull-right
+				button.btn.btn-sm.btn-primary(type="submit") Submit

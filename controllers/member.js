@@ -57,9 +57,8 @@ router.get('/auth', function(req, res){
 			json: true
 		}, function(err, resp, user){
 			member.findOrCreate(user, function(user){
-				req.session.role = 'member';
-				req.session.memberInfo = user;
-				app.locals.memberInfo = user;
+				app.locals.memberRole = req.session.role = 'member';
+				app.locals.memberInfo = req.session.memberInfo = user;
 				res.redirect("/board/"+user.screen_name);
 			});
 		});
@@ -70,15 +69,21 @@ router.get('/auth', function(req, res){
  *Form to change a member's profile information
  */
 router.get('/profile', auth.requires('member'), function(req, res){
-	res.render("member_profile", {title: " profile"});
+	res.render("member_profile", {title: "Member Profile"});
 });
 
 /**
  *Updates a member's profile
  */
-router.post('/profile', auth.requires('member'), function(req, res){
-	
-	res.redirect("/board/:member");
+router.post('/profile', auth.requires('member'), member.validateInputs, member.updateLocals(app), function(req, res){
+	member.update(req.session.memberInfo.screen_name, {
+		firstname: req.body.firstname,
+		lastname: req.body.lastname,
+		city: req.body.city,
+		state: req.body.state
+	}, function(){
+		res.redirect("/board/"+req.session.memberInfo.screen_name);
+	});
 });
 
 /**
@@ -86,6 +91,7 @@ router.post('/profile', auth.requires('member'), function(req, res){
  */
 router.get('/logout', function(req, res){
 	app.locals.memberRole = 'public';
+	app.locals.memberInfo = {'screen_name': ''};
 	req.session.destroy();
 	res.redirect("/board/public");
 });

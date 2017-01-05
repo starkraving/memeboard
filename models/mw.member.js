@@ -6,12 +6,13 @@ module.exports = (function(){
 		'screen_name': String,
 		'id': Number,
 		'profile_image_url_https': String,
+		'firstname': {type: String, default: ''},
+		'lastname': {type: String, default: ''},
 		'city': {type: String, default: ''},
-		'state': {type: String, default: ''},
-		'country': {type: String, default: ''}
+		'state': {type: String, default: ''}
 	}));
 
-	return {
+	objReturn = {
 		findOrCreate: function(userData, callback) {
 			memberModel.findOne({screen_name: userData.screen_name, id: userData.id}).exec(function(err, result){
 				if ( err ) return;
@@ -33,7 +34,63 @@ module.exports = (function(){
 					next();
 				});
 			}
+		},
+
+		locals: function(app) {
+			return function(req, res, next) {
+				app.locals.memberRole = 'public';
+				app.locals.memberInfo = {'screen_name':''};
+				if ( req.session.role ) {
+					app.locals.memberRole = req.session.role;
+					app.locals.memberInfo = req.session.memberInfo;
+				}
+				next();
+			};
+		},
+
+		update: function(screenName, memberInfo, callback) {
+			memberModel.findOne({screen_name: screenName}).exec(function(err, result){
+				if ( err || !result ) {
+					callback();
+				} else {
+					for ( var key in memberInfo ) {
+						result[key] = memberInfo[key];
+					}
+					result.save(function(err, doc, rowsaffected){
+						callback();
+					});
+				}
+			});
+		},
+
+		validateInputs: function(req, res, next) {
+			var illegalChars = /[^a-zA-Z0-9 -'\.]/;
+			var found = false;
+			for ( var field in req.body ) {
+				if ( req.body[field].match(illegalChars) ) {
+					found = true;
+				}
+			}
+			if ( found ) {
+				res.redirect('/board/public');
+			} else {
+				next();
+			}
 		}
-	}
+	};
+
+	objReturn.updateLocals = function(app) {
+		return function(req, res, next) {
+			req.session.memberInfo.firstname = req.body.firstname;
+			req.session.memberInfo.lastname = req.body.lastname;
+			req.session.memberInfo.city = req.body.city;
+			req.session.memberInfo.state = req.body.state;
+
+			var updateLocals = objReturn.locals(app);
+			updateLocals(req, res, next);
+		};
+	};
+
+	return objReturn;
 	
 })();
