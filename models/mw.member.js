@@ -9,7 +9,8 @@ module.exports = (function(){
 		'firstname': {type: String, default: ''},
 		'lastname': {type: String, default: ''},
 		'city': {type: String, default: ''},
-		'state': {type: String, default: ''}
+		'state': {type: String, default: ''},
+		'faves': {type: Array, default: []}
 	}));
 
 	objReturn = {
@@ -26,10 +27,10 @@ module.exports = (function(){
 			});
 		},
 
-		getByScreenName: function(scope, propName) {
+		byScreenName: function(scope, propName) {
 			return function(req, res, next) {
 				memberModel.findOne({screen_name: req[scope][propName]}).exec(function(err, result){
-					if ( err || !result ) result = {};
+					if ( err || !result ) result = false;
 					res.memberInfo = result;
 					next();
 				});
@@ -48,13 +49,13 @@ module.exports = (function(){
 			};
 		},
 
-		update: function(screenName, memberInfo, callback) {
+		update: function(screenName, userData, callback) {
 			memberModel.findOne({screen_name: screenName}).exec(function(err, result){
 				if ( err || !result ) {
 					callback();
 				} else {
-					for ( var key in memberInfo ) {
-						result[key] = memberInfo[key];
+					for ( var key in userData ) {
+						result[key] = userData[key];
 					}
 					result.save(function(err, doc, rowsaffected){
 						callback();

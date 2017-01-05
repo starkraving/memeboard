@@ -1,7 +1,7 @@
 var express     = require('express');
 var router      = express.Router();
 var member      = require('../models/mw.member.js');
-
+var meme        = require('../models/mw.meme.js');
 
 /**
  *Shows a board with the most recent (n) memes
@@ -13,8 +13,21 @@ router.get('/public/:p?', function(req, res){
 /**
  *Shows images posted by a single member, with optional admin controls
  */
-router.get('/:member/:p?', member.getByScreenName('params', 'member'), function(req, res){
-	res.render("board_member_", {title: " :member "});
+router.get('/:member/:p?', member.byScreenName('params', 'member'), meme.byMember('params', 'member'), function(req, res){
+	var props = {
+		memberInfo: res.memberInfo,
+		memesByMember: res.memesByMember,
+		title: req.params.member.charAt(0).toUpperCase()
+					+req.params.member.slice(1)
+					+"'s Board"
+	}
+	if ( false === res.memberInfo ) {
+		res.render("board_member_notfound", props);
+	} else if ( req.session.memberInfo && req.session.memberInfo.screen_name == res.memberInfo.screen_name ) {
+		res.render("board_member_owner", props);
+	} else {
+		res.render("board_member_browsing", props);
+	}
 });
 
 /**
