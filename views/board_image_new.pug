@@ -1,7 +1,12 @@
 extends layout
 
 block content
-	h2  image new
-	p Form to post new image to a member's board
-	form(action="/board/image/new", method="post")
-		button(type="submit") Submit
+	h2  New Meme
+	form#create(method="post", action="/board/image/new")
+		div.form-group
+			label.form-label(for="image_url") Image URL:
+			input.form-control(type="url", name="image_url", required)
+		div.form-group
+			label.form-label(for="image_title") Title:
+			input.form-control(type="text", name="image_title", required)
+		button.btn.btn-primary(type="submit") Create

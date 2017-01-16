@@ -2,4 +2,25 @@ extends layout
 
 block content
 	h2=  title
-	
+	section#create
+		form(method="post", action="/board/image/new")
+			a.btn.btn-primary(href="/board/image/new") Create
+	section#boards
+		each meme in memberMemes
+			article
+				img.responsive(title=meme.image_title, src=meme.image_url)
+				h3= meme.image_title
+				footer
+					figure
+						figcaption(data-faves=meme.image_faves)
+						time= meme.image_created
+					aside
+						form(method="post", action="/board/image/"+meme._id+"/delete")
+							button.btn(type="submit") Delete
+		else
+			article
+				img.responsive(src="public/images/meme_placeholder.png")
+				h3 Your meme board is currently empty
+				footer
+					figure
+						figcaption Get started with the form above!
