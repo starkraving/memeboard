@@ -16,6 +16,10 @@ header nav:target .hamburger { left: 0px; transition: left 0s linear .5s; }
 .navbar-nav { margin: 9.75px 0px; }
 main { padding-top: 60px; }
 
+#boards { display: flex; margin: -10px 0 0 -10px; flex-wrap: wrap; }
+#boards h2 { display: block; width: 100%; }
+#boards article { flex: 1 0 320px; box-sizing: content-box; padding: 10px; margin: 10px 0 0 10px; background-color: #000; color: #fff; }
+
 @media only screen and (min-width: 768px) {
     /* Style adjustments for viewports that meet the condition */
     .navbar { min-height: 60px; }
@@ -25,5 +29,8 @@ main { padding-top: 60px; }
     .navbar-brand { padding: 19.5px 15px; height: 60px; width: auto; text-align: left; }
     .navbar-header { width: auto; }
     .navbar-nav { margin: 9.75px -15px; }
-    main { padding-top: 110px; }
+    main { padding-top: 100px; }
+    #boards article { max-width: calc(50% - 10px); }
+	#boards article img { width: 100%; filter: grayscale(100%); transition: filter 1s; }
+	#boards article:hover img { filter: inherit; transition: filter 1s; }
 }

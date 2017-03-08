@@ -11,11 +11,6 @@ block content
 					figure
 						figcaption(data-faves=meme.image_faves)
 						time= meme.image_created
-					aside
-						form(method="post", action="/board/"+memberData.screen_name+"/image/"+meme._id+"/fave")
-							button.btn(type="submit")= meme.image_faves
-						form(method="post", action="/board/"+memberData.screen_name+"/image/"+meme._id+"/grab")
-							button.btn.btn-secondary(type="submit") Add to Board
 		else
 			article
 				img.responsive(src="public/images/meme_placeholder.png")

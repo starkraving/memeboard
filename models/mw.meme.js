@@ -10,13 +10,24 @@ module.exports = (function(){
 		'image_faves': Number
 	}));
 
+	var getPropFromScope = function(scope, propName) {
+		var propNames = propName.split('.');
+		if ( propNames.length === 1 ) {
+			return ( propName.length > 0 ) ? scope[propName] : scope;
+		} else {
+			newPropName = propNames.shift();
+			return getPropFromScope(scope[newPropName], propNames.join('.'));
+		}
+
+	}
+
 	var perPage = 12;
 
 	return {
 		byMember: function(scope, propName) {
 			return function(req, res, next) {
 				var pageN = req.params.p || 1;
-				memeModel.find({screen_name: req[scope][propName]})
+				memeModel.find({screen_name: getPropFromScope(req[scope], propName)})
 						.sort({image_created: 1}).skip((pageN - 1) * perPage).limit(perPage)
 						.exec(function(err, results) {
 							if ( err || !results ) results = [];
@@ -27,11 +38,11 @@ module.exports = (function(){
 		},
 		byFaves: function(req, res, next) {
 			var pageN = req.params.p || 1;
-			memeModel.find().sort({image_faves: 1})
+			memeModel.find().sort({image_faves: -1})
 					.skip((pageN - 1) * perPage).limit(perPage)
 					.exec(function(err, results) {
 						if ( err || !results ) results = [];
-						res.memeByFaves = results;
+						res.memesByFaves = results;
 						next();
 					});
 		},
@@ -67,7 +78,42 @@ module.exports = (function(){
 					});
 				}
 			});
-		}
+		},
+		addToFaves: function(id, memberInfo, callback) {
+			memeModel.findOne({_id: id}).exec(function(err, result){
+				if ( err || !result ) {
+					callback();
+				} else {
+					result.image_faves++;
+					result.save(function(err, doc, rowsaffected){
+						if ( err ) {
+							callback();
+						} else {
+							memberInfo.faves.push(id);
+							memberInfo.save(function(err, doc, rowsaffected){
+								callback();
+							});
+						}
+					});
+				}
+			});
+		},
+		addToMember: function(imageData, screenName, callback) {
+			memeModel.findOne({screen_name: screenName, image_url: imageData.image_url}).exec(function(err, result){
+				if ( err || !screenName || result ) {
+					callback();
+				} else {
+					var meme = new memeModel({
+						screen_name: screenName,
+						image_url: imageData.image_url,
+						image_title: imageData.image_title,
+						image_faves: 0
+					}).save(function(err, doc, rowsaffected){
+						callback();
+					});
+				}
+			});
+		},
 	};
 	
 })();
