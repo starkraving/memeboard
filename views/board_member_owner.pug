@@ -8,7 +8,7 @@ block content
 	section#boards
 		each meme in memberMemes
 			article
-				img.responsive(title=meme.image_title, src=meme.image_url)
+				img.responsive(title=meme.image_title, src=meme.image_url, onerror="this.src='/public/images/meme_placeholder.jpg'")
 				h3= meme.image_title
 				footer
 					figure
@@ -19,7 +19,7 @@ block content
 							button.btn(type="submit") Delete
 		else
 			article
-				img.responsive(src="public/images/meme_placeholder.png")
+				img.responsive(src="public/images/meme_placeholder.jpg")
 				h3 Your meme board is currently empty
 				footer
 					figure
